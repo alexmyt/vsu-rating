@@ -1,5 +1,5 @@
 from telegram.ext import Updater
-updater = Updater(token='1176844516:AAFzHPuP3kYv6VGbJI6mt7GTnMXgj-Qknwo', use_context=True)
+updater = Updater(token='1176844516:AAFzHPuP3kYv6VGbJI6mt7GTnMXgj-Qknwo', use_context=True, persistence=persistence)
 dispatcher = updater.dispatcher
 
 import logging
@@ -20,3 +20,4 @@ def get(update, context):
 dispatcher.add_handler(CommandHandler('get', get))
 
 updater.start_polling()
+updater.idle()
