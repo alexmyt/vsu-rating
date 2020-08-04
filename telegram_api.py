@@ -1,5 +1,10 @@
 from telegram.ext import Updater
-updater = Updater(token='1176844516:AAFzHPuP3kYv6VGbJI6mt7GTnMXgj-Qknwo', use_context=True)
+import os
+
+TOKEN = '1176844516:AAFzHPuP3kYv6VGbJI6mt7GTnMXgj-Qknwo'
+PORT = int(os.environ.get('PORT', 5000))
+
+updater = Updater(token=TOKEN, use_context=True)
 dispatcher = updater.dispatcher
 
 import logging
@@ -19,5 +24,9 @@ def get(update, context):
 
 dispatcher.add_handler(CommandHandler('get', get))
 
-updater.start_polling()
+updater.start_webhook(listen="0.0.0.0",
+                      port=int(PORT),
+                      url_path=TOKEN)
+updater.bot.setWebhook('https://vsu-ratings.herokuapp.com/' + TOKEN)
+
 updater.idle()
