@@ -22,20 +22,21 @@ def get_rating(url, form, source, program):
 
   return(cur_rating)
 
-rating_doc = "Рейтинги в Воронежском университете"
+def get_rating_doc():
+  rating_doc = "Рейтинги абитуриента %s в Воронежском университете\n" % abiturient_name
 
-for rating_type in [candidates_rating_url, rating_url]:
-  if (rating_type == candidates_rating_url):
-    rating_doc += "\nРейтинг подавших согласие:"
-  else:
-    rating_doc += "\nОбщий рейтинг:"
+  for rating_type in [candidates_rating_url, rating_url]:
+    if (rating_type == candidates_rating_url):
+      rating_doc += "\nРейтинг подавших согласие:"
+    else:
+      rating_doc += "\nОбщий рейтинг:"
 
-  for source_id in financing_source:
-    for program_id in education_program:
-      rating = get_rating(rating_type,1,source_id,program_id)
-      if (rating > 0): 
-        rating_doc += "\n%s %s: %s" % (financing_source[source_id], education_program[program_id], rating)
+    for source_id in financing_source:
+      for program_id in education_program:
+        rating = get_rating(rating_type,1,source_id,program_id)
+        if (rating > 0): 
+          rating_doc += "\n%s %s: %s" % (financing_source[source_id], education_program[program_id], rating)
 
-  rating_doc += "\n"
+    rating_doc += "\n"
 
-print(rating_doc)
+  return(rating_doc)
