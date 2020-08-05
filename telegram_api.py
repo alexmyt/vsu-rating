@@ -1,4 +1,5 @@
 import logging
+from telegram import ParseMode,ChatAction
 from telegram.ext import Updater, CommandHandler
 from os import environ
 import vgu_ratings
@@ -19,7 +20,19 @@ def error(update, context):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 def get(update, context):
-  """Get ratings from VSU site"""
+  """Get ratings from database"""
+  context.bot.send_message(chat_id=update.effective_chat.id, text=vgu_ratings.get_rating_doc())
+
+def fetch(update, context):
+  """Fetch ratings from VSU site"""
+  context.bot.send_chat_action(chat_id=update.effective_chat.id, action = ChatAction.UPLOAD_DOCUMENT)
+
+  updated = vgu_ratings.fetch_all_ratings()
+  if updated:
+    context.bot.send_message(chat_id=update.effective_chat.id, text="Ratings wil be *updated!*", parse_mode = ParseMode.MARKDOWN_V2)
+  else:
+    context.bot.send_message(chat_id=update.effective_chat.id, text="Nothing changed.")
+
   context.bot.send_message(chat_id=update.effective_chat.id, text=vgu_ratings.get_rating_doc())
 
 def main():
@@ -28,7 +41,8 @@ def main():
 
   # Bot commands
   dispatcher.add_handler(CommandHandler('start', start))
-  dispatcher.add_handler(CommandHandler('get', get))
+  dispatcher.add_handler(CommandHandler('get', fetch))
+  dispatcher.add_handler(CommandHandler('fetch', fetch))
 
   # Error handling
   dispatcher.add_error_handler(error)
